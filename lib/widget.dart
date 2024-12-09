@@ -1,142 +1,66 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-class Favorite_food extends StatelessWidget {
-  const Favorite_food({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+class MyGridPage extends StatelessWidget {
+  const MyGridPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('อาหารที่ฉันชอบ ชาคริต อสังกรุณา'),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: const Text('GridView.builder'),
+      centerTitle: true,
+    ),
+    body: GridView.builder(
+      itemCount: 7,
+      padding: const  EdgeInsets.all(10),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
+        childAspectRatio: 3/4,
+        crossAxisSpacing: 5,
+        mainAxisSpacing: 5,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            container1(),
-             container2()
-          ],
-        ),
+      itemBuilder: (context, index) => ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: buildGridTile(context, index),
       ),
-    );
-  }
+    ),
+  );
 
-  Widget container1() => Container(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Image.asset(
-              'assets/images/เฟรนฟราย.jpg',
-              width: 400,
-              height: 300,
-            ),
-            // เพิ่มช่องว่างระหว่างรูปกับข้อความ
-            const Text(
-              'French Fries',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
+  Widget buildGridTile (BuildContext ctx, int index){
+    var rnd = Random();
 
-             const SizedBox(height: 5), // เพิ่มช่องว่างเล็กน้อยระหว่างข้อความ
-            const Text(
-              ' เฟรนช์ฟรายส์มีต้นกำเนิดจากยุโรป โดยมีการถกเถียงว่ามาจากเบลเยียมหรือฝรั่งเศส แต่ชื่อ "French Fries" มาจากทหารอเมริกันที่ชิมในเบลเยียมช่วงสงครามโลกครั้งที่ 1 ปัจจุบันเป็นอาหารยอดนิยมทั่วโลกที่มักเสิร์ฟในร้านฟาสต์ฟู้ดและมีหลายรูปแบบ เช่น แท่งยาวหรือราดชีส',
-              style: TextStyle(fontSize: 16, color: Colors.black87),
-            ),
-          ],
-        ),
+    return GridTile(
+      footer: GridTileBar(
+        backgroundColor: const Color.fromARGB(255, 143, 140, 131),
+        title: const Text("สินค้า"),
+        subtitle: const Text("\${50 + rnd.nextInt(200)}"),
+        trailing: InkWell(
+          child: const Icon(
+            Icons.zoom_in,
+            size: 22,
+            color: Colors.white,
+          ),
+          onTap: ()=>myAlert(ctx,'คุณได้เปิดดูสินค้า ลำดับที่ : $index')    
+          ),
+      ),
+
+      child: Image.network("https://picsum.photos/250?random=$index",
+      fit: BoxFit.cover,
+      ),    
       );
-  Widget container2() => Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.red, width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      width: 300,
-      child:const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "★★★★★",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.amber,
-                ),
-              ),
-              Text(
-                "170 Reviews",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          // Prep, Cook, Feeds details
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children:  [
-                  Text(
-                    "PREP:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "3   min",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children:  [
-                  Text(
-                    "COOK:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "5-8 min",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children:  [
-                  Text(
-                    "FEEDS:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    "4-6",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-
-  
+  }
+  void myAlert(BuildContext ctx,String txt){
+    showDialog(
+      context: ctx, 
+      builder: (ctx)=> AlertDialog(
+       content: Text(txt),
+       actions: [
+        TextButton(
+          onPressed:()=> Navigator.of(ctx).pop() , 
+          child:const Text('ตกลง'))
+       ],
+      ));
+  }
 }
